@@ -1,0 +1,50 @@
+{
+  "name": "ampersand-filtered-collection",
+  "version": "1.0.0",
+  "description": "Filterable, sortable, proxy of a collection that behaves like a collection.",
+  "main": "ampersand-filtered-collection.js",
+  "scripts": {
+    "start": "run-browser test/main.js",
+    "test": "node test/main.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wraithgar/filtered-collection.git"
+  },
+  "keywords": [
+    "ampersand",
+    "collection",
+    "filter",
+    "sort"
+  ],
+  "author": "Gar <gar@andyet.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wraithgar/filtered-collection/issues"
+  },
+  "homepage": "https://github.com/wraithgar/filtered-collection",
+  "dependencies": {
+    "amp-contains": "^1.0.1",
+    "amp-difference": "^1.0.1",
+    "amp-each": "^1.0.1",
+    "amp-every": "^1.0.1",
+    "amp-extend": "^1.0.1",
+    "amp-is-array": "^1.0.1",
+    "amp-is-object-equal": "^1.0.2",
+    "amp-keys": "^1.0.1",
+    "amp-reduce": "^1.0.0",
+    "ampersand-class-extend": "^1.0.1",
+    "ampersand-collection-underscore-mixin": "^1.0.3",
+    "ampersand-events": "^1.0.1",
+    "jshint": "^2.6.0",
+    "precommit-hook": "^1.0.7",
+    "tap-spec": "^2.2.0",
+    "tape": "^3.4.0"
+  },
+  "devDependencies": {
+    "amp-pluck": "^1.0.0",
+    "amp-to-array": "^1.0.1",
+    "ampersand-collection": "^1.4.0",
+    "ampersand-state": "^4.4.4"
+  }
+}
