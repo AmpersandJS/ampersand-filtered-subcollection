@@ -328,7 +328,7 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         var action = eventName;
         var alreadyHave = this._indexedGet(model);
         //Whether or not we are to expect a sort event from our collection later
-        var sortable = this.collection.comparator && (options.at == null) && options.sort !== false;
+        var sortable = this.collection.comparator && (options.at == null) && (options.sort !== false);
         var add = options.add;
         var remove = options.remove;
         var ordered = !sortable && add && remove;
@@ -375,7 +375,9 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
 
         if (action !== 'ignore') this.trigger.apply(this, arguments);
 
-        if (action === 'sort' || !sortable || ((this.comparator !== undefined && propName === this.comparator) || this.collection.comparator !== undefined && propName === this.collection.comparator)) {
+        //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change
+        if (action === 'sort' || (propName && !sortable && contains([this.comparator, this.collection.comparator]), propName))
+       {
             if (ordered && model.isNew) return; //We'll get a sort later
             this.models = this._sortModels(this.models);
             if (this.comparator && action !== 'sort') {
