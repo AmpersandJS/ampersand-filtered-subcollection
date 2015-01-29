@@ -1,26 +1,26 @@
 /*$AMPERSAND_VERSION*/
-var Events = require('ampersand-events');
-var classExtend = require('ampersand-class-extend');
-var underscoreMixins = require('ampersand-collection-underscore-mixin');
-var extend = require('amp-extend');
-var isArray = require('amp-is-array');
+var contains = require('amp-contains');
 var difference = require('amp-difference');
 var each = require('amp-each');
-var iteratee = require('amp-iteratee');
-
+var every = require('amp-every');
+var extend = require('amp-extend');
+var isArray = require('amp-is-array');
+var isEqual = require('amp-is-object-equal');
+var keys = require('amp-keys');
+var reduce = require('amp-reduce');
+var sortedInsert = require('amp-sorted-insert');
+//var sortBy = require('amp-sort-by');
+var sortBy = require('underscore').sortBy;
 //var union = require('amp-union');
 var unique = require('amp-unique');
 var flatten = require('amp-flatten');
 
-//var sortBy = requier('amp-sort-by');
-var sortBy = require('underscore').sortBy;
+var Events = require('ampersand-events');
+var classExtend = require('ampersand-class-extend');
+var underscoreMixins = require('ampersand-collection-underscore-mixin');
 
-var contains = require('amp-contains');
-var every = require('amp-every');
-var keys = require('amp-keys');
-var reduce = require('amp-reduce');
-var isEqual = require('amp-is-object-equal');
 var slice = Array.prototype.slice;
+
 
 function FilteredCollection(collection, spec) {
     this.collection = collection;
@@ -174,41 +174,14 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         return newModels;
     },
 
-    _sortedIndexOf: function (model, models) {
-        var comparator = this.comparator || this.collection.comparator;
-        var minIndex = 0;
-        var maxIndex = models.length - 1;
-        var currentIndex, currentModel, currentCriteria;
-        var compare = iteratee(comparator, model);
-        var modelCriteria = compare(model, models.length, model); //Will be -1,1,0
-        if (!comparator) {
-            return models.length;
-        }
-        while (minIndex <= maxIndex) {
-            currentIndex = (minIndex + maxIndex) / 2 | 0;
-            currentModel = this.models[currentIndex];
-            currentCriteria = compare(currentModel, currentIndex, models);
-            if (currentCriteria < modelCriteria) {
-                minIndex = currentIndex + 1;
-            } else if (currentCriteria > modelCriteria) {
-                maxIndex = currentIndex - 1;
-            } else {
-                return currentIndex;
-            }
-
-        }
-        return ~maxIndex;
-    },
-
     //Add a model to this filtered collection that has already passed the filters
     _addModel: function (model, options, eventName) {
         var newModels = slice.call(this.models);
-        var newIndex = newModels.length;
+        var comparator = this.comparator || this.collection.comparator;
         //Whether or not we are to expect a sort event from our collection later
         var sortable = eventName === 'add' && this.collection.comparator && (options.at == null) && options.sort !== false;
         if (!sortable) {
-            newIndex = Math.abs(this._sortedIndexOf(model, newModels));
-            newModels.splice(newIndex, 0, model);
+            sortedInsert(newModels, model, comparator);
         } else {
             newModels.push(model);
             if (options.at) newModels = this._sortModels(newModels);

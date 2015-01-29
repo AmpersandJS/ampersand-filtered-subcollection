@@ -340,15 +340,15 @@ test('have the correct ordering saved when processing a sort event', function (t
         comparator: 'name'
     });
 
-    var third = sub.at(42);
+    var third = sub.at(40);
 
     third.sweet = false;
 
-    t.notEqual(third.id, sub.at(42).id);
+    t.notEqual(third.id, sub.at(40).id);
     t.notOk(sub.get(third.id));
 
     sub.on('sort', function () {
-        t.equal(third.id, sub.at(42).id);
+        t.equal(third.id, sub.at(40).id);
     });
 
     third.sweet = true;
