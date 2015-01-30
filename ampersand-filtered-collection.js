@@ -8,16 +8,12 @@ var isArray = require('amp-is-array');
 var isEqual = require('amp-is-object-equal');
 var keys = require('amp-keys');
 var reduce = require('amp-reduce');
+var sortBy = require('amp-sort-by');
 var sortedInsert = require('amp-sorted-insert');
-//var sortBy = require('amp-sort-by');
-var sortBy = require('underscore').sortBy;
-//var union = require('amp-union');
-var unique = require('amp-unique');
-var flatten = require('amp-flatten');
-
-var Events = require('ampersand-events');
+var union = require('amp-union');
 var classExtend = require('ampersand-class-extend');
 var underscoreMixins = require('ampersand-collection-underscore-mixin');
+var Events = require('ampersand-events');
 
 var slice = Array.prototype.slice;
 
@@ -154,8 +150,8 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
     },
 
     // adds a property or array of properties to watch, ensures uniquness.
-    _watch: function (item) {
-        this._watched = unique(flatten([this._watched, item]));
+    _watch: function (items) {
+        this._watched = union(this._watched, items);
     },
 
     // removes a watched property
