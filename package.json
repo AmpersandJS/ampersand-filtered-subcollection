@@ -1,15 +1,15 @@
 {
-  "name": "ampersand-filtered-collection",
+  "name": "ampersand-filtered-subcollection",
   "version": "1.0.0",
   "description": "Filterable, sortable, proxy of a collection that behaves like a collection.",
-  "main": "ampersand-filtered-collection.js",
+  "main": "ampersand-filtered-subcollection.js",
   "scripts": {
     "start": "run-browser test/main.js",
     "test": "node test/main.js | tap-spec"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wraithgar/filtered-collection.git"
+    "url": "https://github.com/AmpersandJS/ampersand-filtered-subcollection"
   },
   "keywords": [
     "ampersand",
@@ -20,9 +20,9 @@
   "author": "Gar <gar@andyet.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wraithgar/filtered-collection/issues"
+    "url": "https://github.com/AmpersandJS/ampersand-filtered-subcollection/issues"
   },
-  "homepage": "https://github.com/wraithgar/filtered-collection",
+  "homepage": "https://github.com/AmpersandJS/ampersand-filtered-subcollection",
   "dependencies": {
     "amp-contains": "^1.0.1",
     "amp-difference": "^1.0.1",
