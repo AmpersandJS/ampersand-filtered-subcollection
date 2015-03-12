@@ -1,4 +1,4 @@
-# ampersand-filtered-collection
+# ampersand-filtered-subcollection
 
 Lead Maintainer: [Michael Garvin](https://github.com/wraithgar)
 
@@ -6,7 +6,7 @@ Lead Maintainer: [Michael Garvin](https://github.com/wraithgar)
 
 Filtered subset of a collection that emits events like a collection.
 
-Often for one part of an app you want a whole collection of models, but for another you want some sort of filtered subcollection. That's what this is for. It gives you a "pseudo collection" that behaves much like a full collections, but really is a subset.
+Often for one part of an app you want a whole collection of models, but for another you want some sort of filtered subcollection. That's what this is for. It gives you a "pseudo collection" that behaves much like a full collection, but really is a subset.
 
 <!-- starthide -->
 Part of the [Ampersand.js toolkit](http://ampersandjs.com) for building clientside applications.
@@ -14,20 +14,20 @@ Part of the [Ampersand.js toolkit](http://ampersandjs.com) for building clientsi
 
 ## browser support
 
-[![browser support](https://ci.testling.com/ampersandjs/ampersand-subcollection.png)
-](https://ci.testling.com/ampersandjs/ampersand-subcollection)
+[![browser support](https://ci.testling.com/ampersandjs/ampersand-filtered-subcollection.png)
+](https://ci.testling.com/ampersandjs/ampersand-filtered-subcollection)
 
 ## install
 
 ```
-npm install ampersand-subcollection
+npm install ampersand-filtered-subcollection
 ```
 
 ## example
 
 ```javascript
 var WidgetCollection = require('./mycollection');
-var SubCollection = require('ampersand-subcollection');
+var FilteredSubcollection = require('ampersand-filtered-subcollection');
 
 
 var widgets = new WidgetCollection();
@@ -39,7 +39,7 @@ widgets.fetch();
 // the `where` filters.
 // It will be sorted by the comparator
 // independent of base collection order
-var favoriteWidgets = new SubCollection(widgets, {
+var favoriteWidgets = new FilteredSubcollection(widgets, {
     where: {
         awesome: true
     },
@@ -51,7 +51,7 @@ var favoriteWidgets = new SubCollection(widgets, {
 
 ## API reference
 
-### new SubCollection(collection, [config])
+### new FilteredSubcollection(collection, [config])
 
 * `collection` {Collection} An instance of an ampersand-collection or Backbone.Collection that contains our full set of models.
 * `config` {Object} [optional] The config object that specifies whether or not a model in the base should be considered part of this subcollection.
@@ -119,18 +119,18 @@ Since we're already depending on underscore for much of the functionality in thi
 
 This means you can just call `collection.each()` or `collection.find()` to find/filter/iterate the models in the subcollection. You can see which underscore methods are included by referencing [ampersand-collection-underscore-mixin](https://github.com/AmpersandJS/ampersand-collection-underscore-mixin).
 
-### SubCollection.extend(mixins...)
+### FilteredSubcollection.extend(mixins...)
 
-Subcollection attaches `extend` to the constructor so if you want to add custom methods to your subcollection constructor, it's easy:
+FilteredSubcollection attaches `extend` to the constructor so if you want to add custom methods to your subcollection constructor, it's easy:
 
 ```javascript
-var SubCollection = require('ampersand-subcollection');
+var FilteredSubcollection = require('ampersand-filtered-subcollection');
 
 // this exports a new constructor that includes
 // the methods you passed on the prototype while
 // maintaining the inheritance chain for instanceof
 // checks.
-module.exports = SubCollection.extend({
+module.exports = FilteredSubcollection.extend({
     myMethod: function () { ... },
     myOtherMethod: function () { ... }
 });
