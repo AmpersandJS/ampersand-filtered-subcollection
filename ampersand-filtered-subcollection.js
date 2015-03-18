@@ -20,7 +20,7 @@ var slice = Array.prototype.slice;
 
 function FilteredCollection(collection, spec) {
     this.collection = collection;
-    this.indexes = collection.indexes;
+    this.indexes = collection.indexes || [];
     this._indexes = {};
     this._resetIndexes(this._indexes);
     this.mainIndex = collection.mainIndex;
@@ -228,8 +228,11 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
     },
 
     _resetIndexes: function (newIndexes) {
-        for (var i = 0; i < this.indexes.length; i++) {
-            newIndexes[this.indexes[i]] = {};
+        var list = slice.call(this.indexes);
+        list.push(this.mainIndex);
+        list.push('cid');
+        for (var i = 0; i < list.length; i++) {
+            newIndexes[list[i]] = {};
         }
     },
 
