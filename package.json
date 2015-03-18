@@ -1,6 +1,6 @@
 {
   "name": "ampersand-filtered-subcollection",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Filterable, sortable, proxy of a collection that behaves like a collection.",
   "main": "ampersand-filtered-subcollection.js",
   "scripts": {
