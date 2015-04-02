@@ -373,6 +373,39 @@ Object.defineProperty(FilteredCollection.prototype, 'isCollection', {
     }
 });
 
+var arrayMethods = [
+    'indexOf',
+    'lastIndexOf',
+    'every',
+    'some',
+    'forEach',
+    'map',
+    'filter',
+    'reduce',
+    'reduceRight'
+];
+
+arrayMethods.forEach(function (method) {
+    FilteredCollection.prototype[method] = function () {
+        return this.models[method].apply(this.models, arguments);
+    };
+});
+
+// alias each/forEach for maximum compatibility
+FilteredCollection.prototype.each = FilteredCollection.prototype.forEach;
+
+// methods to copy from parent
+var collectionMethods = [
+    'serialize',
+    'toJSON'
+];
+
+collectionMethods.forEach(function (method) {
+    FilteredCollection.prototype[method] = function () {
+        return this.collection[method].apply(this, arguments);
+    };
+});
+
 FilteredCollection.extend = classExtend;
 
 module.exports = FilteredCollection;
