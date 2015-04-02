@@ -22,30 +22,33 @@
   "bugs": {
     "url": "https://github.com/AmpersandJS/ampersand-filtered-subcollection/issues"
   },
+  "files": [
+    "ampersand-filtered-subcollection.js"
+  ],
   "homepage": "https://github.com/AmpersandJS/ampersand-filtered-subcollection",
   "dependencies": {
-    "amp-contains": "^1.0.1",
-    "amp-difference": "^1.0.1",
-    "amp-each": "^1.0.1",
-    "amp-every": "^1.0.1",
-    "amp-extend": "^1.0.1",
-    "amp-is-array": "^1.0.1",
-    "amp-is-object-equal": "^1.0.2",
-    "amp-keys": "^1.0.1",
-    "amp-reduce": "^1.0.0",
-    "amp-sort-by": "^1.0.0",
-    "amp-sorted-insert": "^1.0.0",
-    "amp-union": "^1.0.0",
     "ampersand-class-extend": "^1.0.1",
-    "ampersand-collection-underscore-mixin": "^1.0.3",
-    "ampersand-events": "^1.0.1"
+    "ampersand-events": "^1.0.1",
+    "lodash.assign": "^3.0.0",
+    "lodash.difference": "^3.1.0",
+    "lodash.every": "^3.2.0",
+    "lodash.foreach": "^3.0.2",
+    "lodash.includes": "^3.1.0",
+    "lodash.isarray": "^3.0.1",
+    "lodash.isequal": "^3.0.1",
+    "lodash.keys": "^3.0.5",
+    "lodash.reduce": "^3.1.0",
+    "lodash.sortby": "^3.1.0",
+    "lodash.sortedindex": "^3.1.0",
+    "lodash.union": "^3.1.0"
   },
   "devDependencies": {
-    "amp-pluck": "^1.0.0",
-    "amp-to-array": "^1.0.1",
     "ampersand-collection": "^1.4.0",
     "ampersand-state": "^4.4.4",
     "jshint": "^2.6.0",
+    "lodash.find": "^3.2.0",
+    "lodash.pluck": "^3.0.2",
+    "lodash.toarray": "^3.0.0",
     "precommit-hook": "^1.0.7",
     "tap-spec": "^2.2.0",
     "tape": "^3.4.0"
