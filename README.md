@@ -113,12 +113,6 @@ The subcollection maintains a read-only length property that simply proxies to t
 
 The array of filtered models
 
-### all the underscore methods
-
-Since we're already depending on underscore for much of the functionality in this module, we also mixin underscore methods into the subcollection in the same way that Backbone does for collections.
-
-This means you can just call `collection.each()` or `collection.find()` to find/filter/iterate the models in the subcollection. You can see which underscore methods are included by referencing [ampersand-collection-underscore-mixin](https://github.com/AmpersandJS/ampersand-collection-underscore-mixin).
-
 ### FilteredSubcollection.extend(mixins...)
 
 FilteredSubcollection attaches `extend` to the constructor so if you want to add custom methods to your subcollection constructor, it's easy:
