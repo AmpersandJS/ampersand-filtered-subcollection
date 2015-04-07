@@ -1,12 +1,12 @@
 var test = require('tape');
-var mixins = require('ampersand-collection-underscore-mixin');
-var Collection = require('ampersand-collection').extend(mixins);
+var Collection = require('ampersand-collection');
 var SubCollection = require('../ampersand-filtered-subcollection');
 var Model = require('ampersand-state');
-var toArray = require('amp-to-array');
-var every = require('amp-every');
-var keys = require('amp-keys');
-var pluck = require('amp-pluck');
+var every = require('lodash.every');
+var find = require('lodash.find');
+var keys = require('lodash.keys');
+var pluck = require('lodash.pluck');
+var toArray = require('lodash.toarray');
 
 // our widget model
 var Widget = Model.extend({
@@ -19,7 +19,7 @@ var Widget = Model.extend({
 });
 
 // our base collection
-var Widgets = Collection.extend(mixins, {
+var Widgets = Collection.extend({
     model: Widget,
     comparator: 'awesomeness'
 });
@@ -222,11 +222,11 @@ test('should fire `remove` events only if removed items match filter', function 
         }
     });
     // grab a lame widget
-    var lameWidget = base.find(function (model) {
+    var lameWidget = find(base.models, function (model) {
         return model.awesomeness < 5;
     });
     // grab an awesome widget
-    var awesomeWidget = base.find(function (model) {
+    var awesomeWidget = find(base.models, function (model) {
         return model.awesomeness > 5;
     });
     sub.on('remove', function (model) {
@@ -267,7 +267,7 @@ test('make sure changes to `where` properties are reflected in sub collections',
             sweet: true
         }
     });
-    var firstSweet = sub.first();
+    var firstSweet = sub.models[0];
     sub.on('remove', function (model) {
         t.equal(model, firstSweet);
         t.equal(firstSweet.sweet, false);
@@ -284,8 +284,8 @@ test('should be able to `get` a model by id or other index', function (t) {
             sweet: true
         }
     });
-    var cool = sub.first();
-    var lame = base.find(function (model) {
+    var cool = sub.models[0];
+    var lame = find(base.models, function (model) {
         return model.sweet === false;
     });
     // sanity checks
@@ -310,7 +310,7 @@ test('should be able to listen for `change:x` events on subcollection', function
         t.pass('handler called');
         t.end();
     });
-    var cool = sub.first();
+    var cool = sub.models[0];
     cool.name = 'new name';
 });
 
@@ -326,7 +326,7 @@ test('should be able to listen for general `change` events on subcollection', fu
         t.pass('handler called');
         t.end();
     });
-    var cool = sub.first();
+    var cool = sub.models[0];
     cool.name = 'new name';
 });
 
@@ -511,7 +511,7 @@ test('reset', function (t) {
     t.equal(sub.comparator, base.comparator, 'comparator should be reset');
     t.equal(sortTriggered, 0, 'should not have triggered a `sort`');
 
-    t.deepEqual(pluck(sub.models, 'id'), base.pluck('id'), 'base and sub should have same models');
+    t.deepEqual(pluck(sub.models, 'id'), pluck(base.models, 'id'), 'base and sub should have same models');
 
     t.ok(every(itemsAdded, function (item) {
         return item.sweet !== true || item.awesomeness !== 6;
@@ -592,5 +592,14 @@ test('custom event bubbling', function (t) {
     t.equal(customCountSub, 1, 'sub event triggered');
     t.equal(customCountBase, customCountSub, 'sub bubbled custom event');
 
+    t.end();
+});
+
+test('Serialize/toJSON method', function (t) {
+    var c = new Collection();
+    var sub = new SubCollection(c);
+    c.set([{id: 'thing'}, {id: 'other'}]);
+    t.deepEqual([{id: 'thing'}, {id: 'other'}], sub.serialize());
+    t.equal(JSON.stringify([{id: 'thing'}, {id: 'other'}]), JSON.stringify(sub));
     t.end();
 });

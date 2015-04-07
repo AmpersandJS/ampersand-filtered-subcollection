@@ -1,18 +1,17 @@
 /*$AMPERSAND_VERSION*/
-var contains = require('amp-contains');
-var difference = require('amp-difference');
-var each = require('amp-each');
-var every = require('amp-every');
-var extend = require('amp-extend');
-var isArray = require('amp-is-array');
-var isEqual = require('amp-is-object-equal');
-var keys = require('amp-keys');
-var reduce = require('amp-reduce');
-var sortBy = require('amp-sort-by');
-var sortedInsert = require('amp-sorted-insert');
-var union = require('amp-union');
+var includes = require('lodash.includes');
+var difference = require('lodash.difference');
+var forEach = require('lodash.foreach');
+var every = require('lodash.every');
+var assign = require('lodash.assign');
+var isArray = require('lodash.isarray');
+var isEqual = require('lodash.isequal');
+var keys = require('lodash.keys');
+var reduce = require('lodash.reduce');
+var sortBy = require('lodash.sortby');
+var sortedIndex = require('lodash.sortedindex');
+var union = require('lodash.union');
 var classExtend = require('ampersand-class-extend');
-var underscoreMixins = require('ampersand-collection-underscore-mixin');
 var Events = require('ampersand-events');
 
 var slice = Array.prototype.slice;
@@ -29,7 +28,7 @@ function FilteredCollection(collection, spec) {
     this.listenTo(this.collection, 'all', this._onCollectionEvent);
 }
 
-extend(FilteredCollection.prototype, Events, underscoreMixins, {
+assign(FilteredCollection.prototype, Events, {
     // Public API
 
     // add a filter function directly
@@ -91,7 +90,7 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
     // proxy `get` method to the underlying collection
     get: function (query, indexName) {
         var model = this.collection.get(query, indexName);
-        if (model && this.contains(model)) return model;
+        if (model && includes(this.models, model)) return model;
     },
 
     // clear all filters, reset everything
@@ -114,7 +113,7 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         //this.comparator = this.collection.comparator;
         if (spec.comparator) this.comparator = spec.comparator;
         if (spec.where) {
-            each(spec.where, function (value, item) {
+            forEach(spec.where, function (value, item) {
                 this._addFilter(function (model) {
                     return (model.get ? model.get(item) : model[item]) === value;
                 });
@@ -177,7 +176,8 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         //Whether or not we are to expect a sort event from our collection later
         var sortable = eventName === 'add' && this.collection.comparator && (options.at == null) && options.sort !== false;
         if (!sortable) {
-            sortedInsert(newModels, model, comparator);
+            var index = sortedIndex(newModels, model, comparator);
+            newModels.splice(index, 0, model);
         } else {
             newModels.push(model);
             if (options.at) newModels = this._sortModels(newModels);
@@ -278,11 +278,11 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         // save 'em
         this.models = newModels;
 
-        each(toRemove, function (model) {
+        forEach(toRemove, function (model) {
             this.trigger('remove', model, this);
         }, this);
 
-        each(toAdd, function (model) {
+        forEach(toAdd, function (model) {
             this.trigger('add', model, this);
         }, this);
 
@@ -307,7 +307,7 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
 
         if (
             (propName !== undefined && propName === this.comparator) ||
-            contains(this._watched, propName)
+            includes(this._watched, propName)
         ) { //If a property we care about changed
             accepted = this._testModel(model);
 
@@ -348,7 +348,7 @@ extend(FilteredCollection.prototype, Events, underscoreMixins, {
         if (action !== 'ignore') this.trigger.apply(this, arguments);
 
         //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change
-        if (action === 'sort' || (propName && !sortable && contains([this.comparator, this.collection.comparator]), propName))
+        if (action === 'sort' || (propName && !sortable && includes([this.comparator, this.collection.comparator]), propName))
        {
             if (ordered && model.isNew) return; //We'll get a sort later
             this.models = this._sortModels(this.models);
@@ -371,6 +371,39 @@ Object.defineProperty(FilteredCollection.prototype, 'isCollection', {
     get: function () {
         return true;
     }
+});
+
+var arrayMethods = [
+    'indexOf',
+    'lastIndexOf',
+    'every',
+    'some',
+    'forEach',
+    'map',
+    'filter',
+    'reduce',
+    'reduceRight'
+];
+
+arrayMethods.forEach(function (method) {
+    FilteredCollection.prototype[method] = function () {
+        return this.models[method].apply(this.models, arguments);
+    };
+});
+
+// alias each/forEach for maximum compatibility
+FilteredCollection.prototype.each = FilteredCollection.prototype.forEach;
+
+// methods to copy from parent
+var collectionMethods = [
+    'serialize',
+    'toJSON'
+];
+
+collectionMethods.forEach(function (method) {
+    FilteredCollection.prototype[method] = function () {
+        return this.collection[method].apply(this, arguments);
+    };
 });
 
 FilteredCollection.extend = classExtend;
