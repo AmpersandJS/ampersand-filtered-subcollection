@@ -348,8 +348,10 @@ assign(FilteredCollection.prototype, Events, {
         if (action !== 'ignore') this.trigger.apply(this, arguments);
 
         //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change
-        if (action === 'sort' || (propName && !sortable && includes([this.comparator, this.collection.comparator]), propName))
-       {
+        if (
+            action === 'sort' ||
+            (propName && !sortable && includes([this.comparator, this.collection.comparator], propName))
+        ) {
             if (ordered && model.isNew) return; //We'll get a sort later
             this.models = this._sortModels(this.models);
             if (this.comparator && action !== 'sort') {
