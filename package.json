@@ -40,6 +40,7 @@
     "lodash.reduce": "^3.1.0",
     "lodash.sortby": "^3.1.0",
     "lodash.sortedindex": "^3.1.0",
+    "lodash.startswith": "^3.0.1",
     "lodash.union": "^3.1.0"
   },
   "devDependencies": {

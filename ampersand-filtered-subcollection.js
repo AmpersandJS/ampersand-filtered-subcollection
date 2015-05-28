@@ -11,6 +11,7 @@ var reduce = require('lodash.reduce');
 var sortBy = require('lodash.sortby');
 var sortedIndex = require('lodash.sortedindex');
 var union = require('lodash.union');
+var startsWith = require('lodash.startswith');
 var classExtend = require('ampersand-class-extend');
 var Events = require('ampersand-events');
 
@@ -107,6 +108,9 @@ assign(FilteredCollection.prototype, Events, {
         return index[query] || index[query[this.mainIndex]] || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
 
+    _contains: function (model) {
+        return this.models.indexOf(model) !== -1;
+    },
 
     _parseSpec: function (spec) {
         if (spec.watched) this._watch(spec.watched);
@@ -322,6 +326,11 @@ assign(FilteredCollection.prototype, Events, {
             if (!this._testModel(model) || alreadyHave) {
                 action = 'ignore';
             }
+        } else if (startsWith(action, 'change')) {
+            //Don't trigger change events that are not from this collection
+            if (!this._contains(model)) {
+                action = 'ignore';
+            }
         }
 
         // action has now passed the filters
@@ -345,7 +354,9 @@ assign(FilteredCollection.prototype, Events, {
            return;
         }
 
-        if (action !== 'ignore') this.trigger.apply(this, arguments);
+        if (action !== 'ignore') {
+          this.trigger.apply(this, arguments);
+        }
 
         //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change
         if (
