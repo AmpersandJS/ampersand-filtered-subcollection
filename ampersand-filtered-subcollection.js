@@ -11,7 +11,6 @@ var reduce = require('lodash.reduce');
 var sortBy = require('lodash.sortby');
 var sortedIndex = require('lodash.sortedindex');
 var union = require('lodash.union');
-var startsWith = require('lodash.startswith');
 var classExtend = require('ampersand-class-extend');
 var Events = require('ampersand-events');
 
@@ -296,12 +295,13 @@ assign(FilteredCollection.prototype, Events, {
         }
     },
 
-    _onCollectionEvent: function (eventName, model, that, options) {
+    _onCollectionEvent: function (event, model, that, options) {
         /*jshint -W030 */
         options || (options = {});
         var accepted;
-        var propName = eventName.split(':')[1];
-        var action = eventName;
+        var eventName = event.split(':')[0];
+        var propName = event.split(':')[1];
+        var action = event;
         var alreadyHave = this._indexedGet(model);
         //Whether or not we are to expect a sort event from our collection later
         var sortable = this.collection.comparator && (options.at == null) && (options.sort !== false);
@@ -326,11 +326,9 @@ assign(FilteredCollection.prototype, Events, {
             if (!this._testModel(model) || alreadyHave) {
                 action = 'ignore';
             }
-        } else if (startsWith(action, 'change')) {
+        } else if (eventName === 'change' && !this._contains(model)) {
             //Don't trigger change events that are not from this collection
-            if (!this._contains(model)) {
-                action = 'ignore';
-            }
+            action = 'ignore';
         }
 
         // action has now passed the filters
@@ -341,7 +339,7 @@ assign(FilteredCollection.prototype, Events, {
             if (this.models.length === 0) {
                 this._runFilters();
             } else {
-                this._addModel(model, options, eventName);
+                this._addModel(model, options, event);
                 this.trigger('add', model, this);
             }
             return;
