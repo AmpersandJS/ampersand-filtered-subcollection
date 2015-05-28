@@ -603,3 +603,59 @@ test('Serialize/toJSON method', function (t) {
     t.equal(JSON.stringify([{id: 'thing'}, {id: 'other'}]), JSON.stringify(sub));
     t.end();
 });
+
+test('doesn\'t bubble \'change\' events that are not from the filtered collection', function (t) {
+    var M = Model.extend({
+      props: {
+        prop: 'number'
+      }
+    });
+    var c = new Collection([
+      new M({prop: 0}),
+      new M({prop: 10})
+    ]);
+    var sub = new SubCollection(c, {
+      where: {
+        prop: 0
+      }
+    });
+    sub.on('change', function () {
+      t.fail('sub bubbled change event of model not in sub');
+    });
+    c.on('change', function () {
+      t.pass('collection triggered change event');
+    });
+    c.models[1].prop = 11;
+    t.end();
+});
+
+test('doesn\'t bubble \'change:derivedProperty\' events that are not from the filtered collection', function (t) {
+    var M = Model.extend({
+      props: {
+        prop: 'number'
+      },
+      derived: {
+        derivedProperty: {
+          deps: ['prop'],
+          fn: function () { return 123; }
+        }
+      }
+    });
+    var c = new Collection([
+      new M({prop: 0}),
+      new M({prop: 10})
+    ]);
+    var sub = new SubCollection(c, {
+      where: {
+        prop: 0
+      }
+    });
+    sub.on('change:derivedProperty', function () {
+      t.fail('sub bubbled change:derviedProperty event of model not in sub');
+    });
+    c.on('change:derivedProperty', function () {
+      t.pass('collection triggered change:derivedProperty event');
+    });
+    c.models[1].prop = 11;
+    t.end();
+});

@@ -107,7 +107,6 @@ assign(FilteredCollection.prototype, Events, {
         return index[query] || index[query[this.mainIndex]] || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
 
-
     _parseSpec: function (spec) {
         if (spec.watched) this._watch(spec.watched);
         //this.comparator = this.collection.comparator;
@@ -292,12 +291,13 @@ assign(FilteredCollection.prototype, Events, {
         }
     },
 
-    _onCollectionEvent: function (eventName, model, that, options) {
+    _onCollectionEvent: function (event, model, that, options) {
         /*jshint -W030 */
         options || (options = {});
         var accepted;
-        var propName = eventName.split(':')[1];
-        var action = eventName;
+        var eventName = event.split(':')[0];
+        var propName = event.split(':')[1];
+        var action = event;
         var alreadyHave = this._indexedGet(model);
         //Whether or not we are to expect a sort event from our collection later
         var sortable = this.collection.comparator && (options.at == null) && (options.sort !== false);
@@ -322,6 +322,9 @@ assign(FilteredCollection.prototype, Events, {
             if (!this._testModel(model) || alreadyHave) {
                 action = 'ignore';
             }
+        } else if (eventName === 'change' && !alreadyHave) {
+            //Don't trigger change events that are not from this collection
+            action = 'ignore';
         }
 
         // action has now passed the filters
@@ -332,7 +335,7 @@ assign(FilteredCollection.prototype, Events, {
             if (this.models.length === 0) {
                 this._runFilters();
             } else {
-                this._addModel(model, options, eventName);
+                this._addModel(model, options, event);
                 this.trigger('add', model, this);
             }
             return;
@@ -345,7 +348,9 @@ assign(FilteredCollection.prototype, Events, {
            return;
         }
 
-        if (action !== 'ignore') this.trigger.apply(this, arguments);
+        if (action !== 'ignore') {
+          this.trigger.apply(this, arguments);
+        }
 
         //If we were asked to sort, or we aren't gonna get a sort later and had a sortable property change
         if (
