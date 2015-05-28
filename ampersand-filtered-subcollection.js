@@ -322,7 +322,7 @@ assign(FilteredCollection.prototype, Events, {
             if (!this._testModel(model) || alreadyHave) {
                 action = 'ignore';
             }
-        } else if (eventName === 'change' && !this._indexedGet(model)) {
+        } else if (eventName === 'change' && !alreadyHave) {
             //Don't trigger change events that are not from this collection
             action = 'ignore';
         }
