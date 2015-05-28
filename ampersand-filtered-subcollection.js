@@ -107,10 +107,6 @@ assign(FilteredCollection.prototype, Events, {
         return index[query] || index[query[this.mainIndex]] || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
 
-    _contains: function (model) {
-        return this.models.indexOf(model) !== -1;
-    },
-
     _parseSpec: function (spec) {
         if (spec.watched) this._watch(spec.watched);
         //this.comparator = this.collection.comparator;
@@ -326,7 +322,7 @@ assign(FilteredCollection.prototype, Events, {
             if (!this._testModel(model) || alreadyHave) {
                 action = 'ignore';
             }
-        } else if (eventName === 'change' && !this._contains(model)) {
+        } else if (eventName === 'change' && !this._indexedGet(model)) {
             //Don't trigger change events that are not from this collection
             action = 'ignore';
         }
