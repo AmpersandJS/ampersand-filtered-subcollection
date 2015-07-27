@@ -157,10 +157,15 @@ assign(FilteredCollection.prototype, Events, {
         this._watched = difference(this._watched, isArray(item) ? item : [item]);
     },
 
-    _sortModels: function (newModels) {
-        var comparator = this.comparator || this.collection.comparator;
+    _sortModels: function (newModels, comparator) {
+        comparator = comparator || this.comparator || this.collection.comparator;
         if (comparator) {
-            newModels = sortBy(newModels, comparator);
+            if (typeof comparator === 'string' || comparator.length === 1) {
+                newModels = sortBy(newModels, comparator);
+            } else {
+                // lodash sortBy does not allow for traditional a, b comparisons
+                newModels = newModels.sort(comparator);
+            }
         } else {
             // This only happens when parent got a .set with options.at defined
             this._runFilters();
@@ -255,7 +260,7 @@ assign(FilteredCollection.prototype, Events, {
         }
 
         // sort it
-        if (this.comparator) newModels = sortBy(newModels, this.comparator);
+        if (this.comparator) newModels = this._sortModels(newModels, this.comparator);
 
         newModels.forEach(function (model) {
             this._addIndex(newIndexes, model);
