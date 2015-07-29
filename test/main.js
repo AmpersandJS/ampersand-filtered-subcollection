@@ -606,24 +606,24 @@ test('Serialize/toJSON method', function (t) {
 
 test('doesn\'t bubble \'change\' events that are not from the filtered collection', function (t) {
     var M = Model.extend({
-      props: {
-        prop: 'number'
-      }
+        props: {
+            prop: 'number'
+        }
     });
     var c = new Collection([
-      new M({prop: 0}),
-      new M({prop: 10})
+        new M({prop: 0}),
+        new M({prop: 10})
     ]);
     var sub = new SubCollection(c, {
-      where: {
-        prop: 0
-      }
+        where: {
+            prop: 0
+        }
     });
     sub.on('change', function () {
-      t.fail('sub bubbled change event of model not in sub');
+        t.fail('sub bubbled change event of model not in sub');
     });
     c.on('change', function () {
-      t.pass('collection triggered change event');
+        t.pass('collection triggered change event');
     });
     c.models[1].prop = 11;
     t.end();
@@ -631,31 +631,89 @@ test('doesn\'t bubble \'change\' events that are not from the filtered collectio
 
 test('doesn\'t bubble \'change:derivedProperty\' events that are not from the filtered collection', function (t) {
     var M = Model.extend({
-      props: {
-        prop: 'number'
-      },
-      derived: {
-        derivedProperty: {
-          deps: ['prop'],
-          fn: function () { return 123; }
+        props: {
+            prop: 'number'
+        },
+        derived: {
+            derivedProperty: {
+                deps: ['prop'],
+                fn: function () { return 123; }
+            }
         }
-      }
     });
     var c = new Collection([
-      new M({prop: 0}),
-      new M({prop: 10})
+        new M({prop: 0}),
+        new M({prop: 10})
     ]);
     var sub = new SubCollection(c, {
-      where: {
-        prop: 0
-      }
+        where: {
+            prop: 0
+        }
     });
     sub.on('change:derivedProperty', function () {
-      t.fail('sub bubbled change:derviedProperty event of model not in sub');
+        t.fail('sub bubbled change:derviedProperty event of model not in sub');
     });
     c.on('change:derivedProperty', function () {
-      t.pass('collection triggered change:derivedProperty event');
+        t.pass('collection triggered change:derivedProperty event');
     });
     c.models[1].prop = 11;
+    t.end();
+});
+
+test('sort by string', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var c = new Collection([
+        new M({prop: 3}),
+        new M({prop: 1}),
+        new M({prop: 2})
+    ]);
+    var sub = new SubCollection(c, {
+        comparator: 'prop'
+    });
+    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
+    t.end();
+});
+
+test('sort by 1 argument function', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var c = new Collection([
+        new M({prop: 3}),
+        new M({prop: 1}),
+        new M({prop: 2})
+    ]);
+    var sub1 = new SubCollection(c, {
+        comparator: function (model) {
+            return 0 - model.prop;
+        }
+    });
+    var sub2 = new SubCollection(c, {
+        comparator: function (model) {
+            return model.prop;
+        }
+    });
+    t.deepEqual(pluck(sub1.models, 'prop'), [3, 2, 1]);
+    t.deepEqual(pluck(sub2.models, 'prop'), [1, 2, 3]);
+    t.end();
+});
+
+test('sort by 2 argument function', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var c = new Collection([
+        new M({prop: 3}),
+        new M({prop: 1}),
+        new M({prop: 2})
+    ]);
+    var sub1 = new SubCollection(c, {
+        comparator: function (a, b) {
+            return a.prop - b.prop;
+        }
+    });
+    var sub2 = new SubCollection(c, {
+        comparator: function (a, b) {
+            return b.prop - a.prop;
+        }
+    });
+    t.deepEqual(pluck(sub1.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(pluck(sub2.models, 'prop'), [3, 2, 1]);
     t.end();
 });
