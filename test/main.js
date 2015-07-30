@@ -717,3 +717,20 @@ test('sort by 2 argument function', function (t) {
     t.deepEqual(pluck(sub2.models, 'prop'), [3, 2, 1]);
     t.end();
 });
+
+test('listens to comparator property change event', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var c = new Collection([
+        new M({prop: 3}),
+        new M({prop: 1}),
+        new M({prop: 2})
+    ]);
+    var sub = new SubCollection(c, {
+        comparator: 'prop'
+    });
+    sub.on('change:prop', function () {
+        t.pass('Change triggered');
+        t.end();
+    });
+    sub.models[0].prop = 10;
+});

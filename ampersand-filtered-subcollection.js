@@ -320,8 +320,6 @@ assign(FilteredCollection.prototype, Events, {
                 action = 'add';
             } else if (alreadyHave && !accepted) {
                 action = 'remove';
-            } else {
-                action = 'ignore';
             }
         } else if (action === 'add') { //See if we really want to add
             if (!this._testModel(model) || alreadyHave) {
