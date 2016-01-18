@@ -15,8 +15,7 @@ notifications:
   email: false
 script: npm run test-ci
 addons:
-  sauce_connect:
-    username: ampersandjs-ci
+  sauce_connect: true
 env:
   global:
   - secure: vd9a724Ot/vtV2Iq8nYfk2Qm4cfygdbU/UCPElrdan9umCfx225cxGMNw0nVCyFdBz83111Oj8QdYScbi+8WDpQQeQava2/PjGaQC8TFjR9OhAij+XL0gzcPAxuerrLoUagpoeIrasb0crj/Zwq+Qu8t1BTAhageex8GTjyo7ZM=
