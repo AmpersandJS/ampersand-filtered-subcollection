@@ -9,6 +9,6 @@ browsers:
   - name: ie
     version: 9..latest
   - name: iphone
-    version: '8.4..latest'
+    version: latest
   - name: android
-    version: '4.4..latest'
+    version: latest
