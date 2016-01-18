@@ -1,31 +1,23 @@
 sudo: false
 language: node_js
-node_js:
-  - '4'
+node_js: '4'
 cache:
-  directories:
-    - node_modules
-before_script:
-  - npm prune
+  directories: node_modules
+before_script: npm prune
 branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+  except: /^v\d+\.\d+\.\d+$/
 notifications:
   webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/df4440290bd89d941fb4
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
+    urls: https://webhooks.gitter.im/e/df4440290bd89d941fb4
+    on_success: change
+    on_failure: always
+    on_start: false
   email: false
-script:
-  - npm run test-ci
+script: npm run test-ci
 addons:
   sauce_connect:
     username: ampersandjs-ci
-    access_key:
-      secure: "gd/90cxn7Z9li+nKDKTxuKizhCdL2LdRd1fiPuK8oEgRRNXAYnQzmY9Gw9DUjDPPsW5VtBWKdRcADJhzQcumTwGu34+m0GL7JK8H5Wcmu4JBlSP68kTXNOvONVe4jCwLZmllMV6fxiVDRxHAgCKniaOL1L+crn+zx5eBSDrTITQ="
 env:
   global:
-  - secure: "c13p96hzp54rRtR8eU+RBmXvuLuGUpTrD8fxJaEHTuPBe0gIZzwi8CqYE3yQqrFYU0EFsBvEQiHmslLVTTUvCcCW0ae8xk61RCJyge/6InQWldmJdXawgAeqwoRanfbAMr8tVfTO6T+9iESVcIOkPgWQ3CQb6/KizTe5937BNp4="
-  - secure: "NZXIAqpE9xk/6wKeSL5LLTO0DWE2MZoJ1dP7VWXBDklWfcM4mJS6yYf2/q7nnG1T+RqKQUGF//GOv9JPFmeQxP41UNIH7GwvCfIZSZGvRqZ1xAYmlijvVMWFw6o2WTw42OFu0GFvq5Gp+2ohIdrR4U47HSA0X/+JQYyM5wYDtYs="
+  - secure: vd9a724Ot/vtV2Iq8nYfk2Qm4cfygdbU/UCPElrdan9umCfx225cxGMNw0nVCyFdBz83111Oj8QdYScbi+8WDpQQeQava2/PjGaQC8TFjR9OhAij+XL0gzcPAxuerrLoUagpoeIrasb0crj/Zwq+Qu8t1BTAhageex8GTjyo7ZM=
+  - secure: wu8eiLDqmhOmOnO+WCsh/El+GPvfFvwn19lWzjjgaD3lm6S804vbWg2ULh8DhGxBRprARQdnbzJZUHmbFPai7ckjx00ZDKtOrFE1Air/GJtTsYOw35a7NvMKnkiQbM6EVl0jrvIVbMFJWMvbpDLaNMedf0JbZtDgwonf1Mp6wTg=
