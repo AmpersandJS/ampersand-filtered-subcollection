@@ -53,7 +53,12 @@ test('it should report as being a collection', function (t) {
     var sub = new SubCollection(base);
     t.ok(sub.isCollection);
 
-    sub.isCollection = false;
+    try {
+      sub.isCollection = false;
+    } catch (e) {
+      //It's ok if this throws, the property only has a setter
+      //and some browsers (i.e. phantomjs) error on this
+    }
     t.ok(sub.isCollection);
     t.end();
 });

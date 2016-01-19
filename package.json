@@ -4,8 +4,9 @@
   "description": "Filterable, sortable, proxy of a collection that behaves like a collection.",
   "main": "ampersand-filtered-subcollection.js",
   "scripts": {
-    "start": "run-browser test/main.js",
-    "test": "node test/main.js | tap-spec"
+    "start": "zuul --local -- test/main.js",
+    "test": "zuul --phantom -- test/main.js",
+    "test-ci": "zuul -- test/main.js"
   },
   "repository": {
     "type": "git",
@@ -49,8 +50,9 @@
     "lodash.find": "^3.2.0",
     "lodash.pluck": "^3.0.2",
     "lodash.toarray": "^3.0.0",
+    "phantomjs": "^1.9.19",
     "precommit-hook": "^1.0.7",
-    "tap-spec": "^2.2.0",
-    "tape": "^3.4.0"
+    "tape": "^4.4.0",
+    "zuul": "^3.9.0"
   }
 }

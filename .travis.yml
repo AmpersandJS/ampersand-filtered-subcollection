@@ -1,15 +1,22 @@
+sudo: false
 language: node_js
-node_js:
-- '0.10'
-before_install:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
+node_js: '4'
+cache:
+  directories: node_modules
+before_script: npm prune
+branches:
+  except: /^v\d+\.\d+\.\d+$/
 notifications:
   webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/df4440290bd89d941fb4
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
-
-script: npm run test
+    urls: https://webhooks.gitter.im/e/df4440290bd89d941fb4
+    on_success: change
+    on_failure: always
+    on_start: false
+  email: false
+script: npm run test-ci
+addons:
+  sauce_connect: true
+env:
+  global:
+  - secure: vd9a724Ot/vtV2Iq8nYfk2Qm4cfygdbU/UCPElrdan9umCfx225cxGMNw0nVCyFdBz83111Oj8QdYScbi+8WDpQQeQava2/PjGaQC8TFjR9OhAij+XL0gzcPAxuerrLoUagpoeIrasb0crj/Zwq+Qu8t1BTAhageex8GTjyo7ZM=
+  - secure: wu8eiLDqmhOmOnO+WCsh/El+GPvfFvwn19lWzjjgaD3lm6S804vbWg2ULh8DhGxBRprARQdnbzJZUHmbFPai7ckjx00ZDKtOrFE1Air/GJtTsYOw35a7NvMKnkiQbM6EVl0jrvIVbMFJWMvbpDLaNMedf0JbZtDgwonf1Mp6wTg=
