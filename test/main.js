@@ -675,6 +675,18 @@ test('sort by string', function (t) {
         comparator: 'prop'
     });
     t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
+    t.end();
+});
+
+test('sort by string when property changes', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var m1 = new M({prop: 1});
+    var m2 = new M({prop: 2});
+    var m3 = new M({prop: 3});
+    var c = new Collection([m2, m3, m1]);
+    var sub = new SubCollection(c, {
+        comparator: 'prop'
+    });
     m1.prop = 4;
     t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
     t.end();
@@ -690,19 +702,32 @@ test('sort by 1 argument function', function (t) {
         comparator: function (model) {
             return 0 - model.prop;
         },
-        watched: ['prop'],
     });
     var sub2 = new SubCollection(c, {
         comparator: function (model) {
             return model.prop;
         },
-        watched: ['prop'],
     });
     t.deepEqual(pluck(sub1.models, 'prop'), [3, 2, 1]);
     t.deepEqual(pluck(sub2.models, 'prop'), [1, 2, 3]);
+    t.end();
+});
+
+test('sort by 1 argument function when property changes', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var m1 = new M({prop: 1});
+    var m2 = new M({prop: 2});
+    var m3 = new M({prop: 3});
+    var c = new Collection([m2, m3, m1]);
+    var sub = new SubCollection(c, {
+        comparator: function (model) {
+            return model.prop;
+        },
+        watched: ['prop'],
+    });
+    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
     m1.prop = 4;
-    t.deepEqual(pluck(sub1.models, 'prop'), [4, 3, 2]);
-    t.deepEqual(pluck(sub2.models, 'prop'), [2, 3, 4]);
+    t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
     t.end();
 });
 
@@ -716,19 +741,32 @@ test('sort by 2 argument function', function (t) {
         comparator: function (a, b) {
             return a.prop - b.prop;
         },
-        watched: ['prop'],
     });
     var sub2 = new SubCollection(c, {
         comparator: function (a, b) {
             return b.prop - a.prop;
         },
-        watched: ['prop'],
     });
     t.deepEqual(pluck(sub1.models, 'prop'), [1, 2, 3]);
     t.deepEqual(pluck(sub2.models, 'prop'), [3, 2, 1]);
+    t.end();
+});
+
+test('sort by 2 argument function when property changes', function (t) {
+    var M = Model.extend({ props: { prop: 'number' } });
+    var m1 = new M({prop: 1});
+    var m2 = new M({prop: 2});
+    var m3 = new M({prop: 3});
+    var c = new Collection([m2, m3, m1]);
+    var sub = new SubCollection(c, {
+        comparator: function (a, b) {
+            return a.prop - b.prop;
+        },
+        watched: ['prop'],
+    });
+    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
     m1.prop = 4;
-    t.deepEqual(pluck(sub1.models, 'prop'), [2, 3, 4]);
-    t.deepEqual(pluck(sub2.models, 'prop'), [4, 3, 2]);
+    t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
     t.end();
 });
 
