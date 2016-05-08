@@ -2,11 +2,11 @@ var test = require('tape');
 var Collection = require('ampersand-collection');
 var SubCollection = require('../ampersand-filtered-subcollection');
 var Model = require('ampersand-state');
-var every = require('lodash.every');
-var find = require('lodash.find');
-var keys = require('lodash.keys');
-var pluck = require('lodash.pluck');
-var toArray = require('lodash.toarray');
+var every = require('lodash/every');
+var find = require('lodash/find');
+var keys = require('lodash/keys');
+var map = require('lodash/map');
+var toArray = require('lodash/toArray');
 
 // our widget model
 var Widget = Model.extend({
@@ -516,7 +516,7 @@ test('reset', function (t) {
     t.equal(sub.comparator, base.comparator, 'comparator should be reset');
     t.equal(sortTriggered, 0, 'should not have triggered a `sort`');
 
-    t.deepEqual(pluck(sub.models, 'id'), pluck(base.models, 'id'), 'base and sub should have same models');
+    t.deepEqual(map(sub.models, 'id'), map(base.models, 'id'), 'base and sub should have same models');
 
     t.ok(every(itemsAdded, function (item) {
         return item.sweet !== true || item.awesomeness !== 6;
@@ -674,7 +674,7 @@ test('sort by string', function (t) {
     var sub = new SubCollection(c, {
         comparator: 'prop'
     });
-    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(map(sub.models, 'prop'), [1, 2, 3]);
     t.end();
 });
 
@@ -688,7 +688,7 @@ test('sort by string when property changes', function (t) {
         comparator: 'prop'
     });
     m1.prop = 4;
-    t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
+    t.deepEqual(map(sub.models, 'prop'), [2, 3, 4]);
     t.end();
 });
 
@@ -708,8 +708,8 @@ test('sort by 1 argument function', function (t) {
             return model.prop;
         },
     });
-    t.deepEqual(pluck(sub1.models, 'prop'), [3, 2, 1]);
-    t.deepEqual(pluck(sub2.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(map(sub1.models, 'prop'), [3, 2, 1]);
+    t.deepEqual(map(sub2.models, 'prop'), [1, 2, 3]);
     t.end();
 });
 
@@ -725,9 +725,9 @@ test('sort by 1 argument function when property changes', function (t) {
         },
         watched: ['prop'],
     });
-    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(map(sub.models, 'prop'), [1, 2, 3]);
     m1.prop = 4;
-    t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
+    t.deepEqual(map(sub.models, 'prop'), [2, 3, 4]);
     t.end();
 });
 
@@ -747,8 +747,8 @@ test('sort by 2 argument function', function (t) {
             return b.prop - a.prop;
         },
     });
-    t.deepEqual(pluck(sub1.models, 'prop'), [1, 2, 3]);
-    t.deepEqual(pluck(sub2.models, 'prop'), [3, 2, 1]);
+    t.deepEqual(map(sub1.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(map(sub2.models, 'prop'), [3, 2, 1]);
     t.end();
 });
 
@@ -764,9 +764,9 @@ test('sort by 2 argument function when property changes', function (t) {
         },
         watched: ['prop'],
     });
-    t.deepEqual(pluck(sub.models, 'prop'), [1, 2, 3]);
+    t.deepEqual(map(sub.models, 'prop'), [1, 2, 3]);
     m1.prop = 4;
-    t.deepEqual(pluck(sub.models, 'prop'), [2, 3, 4]);
+    t.deepEqual(map(sub.models, 'prop'), [2, 3, 4]);
     t.end();
 });
 

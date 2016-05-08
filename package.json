@@ -6,7 +6,9 @@
   "scripts": {
     "start": "zuul --local -- test/main.js",
     "test": "zuul --phantom -- test/main.js",
-    "test-ci": "zuul -- test/main.js"
+    "test-ci": "zuul -- test/main.js",
+    "lint": "jshint .",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -30,29 +32,20 @@
   "dependencies": {
     "ampersand-class-extend": "^1.0.1",
     "ampersand-events": "^1.0.1",
-    "lodash.assign": "^3.0.0",
-    "lodash.difference": "^3.1.0",
-    "lodash.every": "^3.2.0",
-    "lodash.foreach": "^3.0.2",
-    "lodash.includes": "^3.1.0",
-    "lodash.isarray": "^3.0.1",
-    "lodash.isequal": "^3.0.1",
-    "lodash.keys": "^3.0.5",
-    "lodash.reduce": "^3.1.0",
-    "lodash.sortby": "^3.1.0",
-    "lodash.sortedindex": "^3.1.0",
-    "lodash.union": "^3.1.0"
+    "lodash": "^4.11.2"
   },
   "devDependencies": {
     "ampersand-collection": "^1.4.0",
-    "ampersand-state": "^4.4.4",
+    "ampersand-state": "^5.0.1",
     "jshint": "^2.6.0",
-    "lodash.find": "^3.2.0",
-    "lodash.pluck": "^3.0.2",
-    "lodash.toarray": "^3.0.0",
-    "phantomjs": "^1.9.19",
-    "precommit-hook": "^1.0.7",
+    "phantomjs": "^2.1.7",
+    "precommit-hook": "^3.0.0",
     "tape": "^4.4.0",
     "zuul": "^3.9.0"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }
